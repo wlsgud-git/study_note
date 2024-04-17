@@ -9,6 +9,14 @@ app.use(express.static(path.join(__dirname, "src"), { maxAge: 20000 }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  next();
+});
+
+app.use((err, req, res, next) => {
+  res.status(400).json({ message: err.message });
+});
+
 app.get("/", (req, res) => {
   res.sendFile(path.resolve(__dirname, "index.html"));
 });
