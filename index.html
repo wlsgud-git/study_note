@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>컴퓨터 기술지식</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="module" src="js/main.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="stp_container">
+      <div class="stp_sidemenu_container">
+        <div class="stp_sidemenu_top">
+          <span class="stp_sidemenu_title">공부노트</span>
+          <button class="stp_folder_add_btn" title="폴더추가">
+            <i class="fa-solid fa-folder-plus"></i>
+          </button>
+        </div>
+
+        <!-- choose -->
+        <ul class="stp_folder_list">
+          <div class="stp_folder_add_section hide">
+            <span class="stp_folder_ico" style="padding: 0px 6px">
+              <i class="fa-solid fa-folder"></i>
+            </span>
+
+            <form method="post" class="stp_folder_add_form">
+              <input class="stp_folder_name_input" name="" />
+            </form>
+          </div>
+        </ul>
+      </div>
+
+      <div class="stp_content_container">
+        <div class="stp_content_nav">
+          <div class="stp_content_func">
+            <button class="stp_body_focus_btn" title="쓰기">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 이 부분은 클릭 이벤트가 발생했을때 콘텐트를 보여주는 부분 -->
+        <!-- <div class="stp_content_box">
+          <form action="#" method="post" class="stp_content_form">
+            <div class="stp_content_title" style="font-size: 18px">
+              <span class="stp_title_label">제목 : </span>
+              <input
+                type="text"
+                spellcheck="false"
+                class="stp_content_title_input"
+              />
+            </div>
+            <div class="stp_content_body">
+              <textarea class="stp_body_textarea"></textarea>
+            </div>
+          </form>
+        </div> -->
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,180 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --d-white: #fff;
+  --d-black: #000;
+  --d-transparent-gray: rgba(0, 0, 0, 0.08);
+
+  --least-height: 100vh;
+
+  --stp-top-height: 50px;
+
+  --stp-sidemenu-width: 280px;
+}
+
+button {
+  outline: none;
+  border: none;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: inherit;
+}
+
+.stp_container {
+  /* border: 1px solid red; */
+  width: 100%;
+  display: flex;
+  min-height: var(--least-height);
+}
+
+.stp_content_container,
+.stp_sidemenu_container {
+  min-height: var(--least-height);
+}
+
+/* 사이드 메뉴바 */
+.stp_sidemenu_container {
+  width: var(--stp-sidemenu-width);
+  border-right: 0.1px solid var(--d-transparent-gray);
+}
+
+.stp_sidemenu_top {
+  width: 100%;
+  height: var(--stp-top-height);
+  border-bottom: 0.1px solid gray;
+  display: flex;
+  align-items: center;
+  padding: 0px 5px;
+  justify-content: space-between;
+}
+
+.stp_sidemenu_title {
+  font-size: 18px;
+  font-weight: 600px;
+}
+
+.stp_folder_add_btn {
+  border-radius: 50%;
+}
+
+.stp_folder_add_btn:hover {
+  background-color: var(--d-transparent-gray);
+}
+
+/* 폴더 리스트 */
+.stp_folder_list {
+  width: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: calc(100% - var(--stp-top-height));
+}
+
+/* 폴더 추가시 양식부분 */
+.stp_folder_add_section {
+  width: 100%;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.06);
+  border: 1px solid black;
+  justify-content: space-between;
+}
+
+.stp_folder_add_form {
+  flex: 1;
+  height: 100%;
+}
+
+.stp_folder_name_input {
+  display: flex;
+  align-items: center;
+  padding: 0px 12px;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.08);
+  border: none;
+  outline: none;
+  border-radius: 8px;
+}
+
+/* 노트 본문내용 */
+.stp_content_container {
+  width: calc(100% - var(--stp-sidemenu-width));
+}
+
+/* 본문 상단 네이게이션 */
+.stp_content_nav {
+  width: 100%;
+  height: var(--stp-top-height);
+  border-bottom: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0px 8px;
+}
+
+.stp_body_focus_btn {
+  border-radius: 50%;
+}
+
+.stp_body_focus_btn:hover {
+  background-color: var(--d-transparent-gray);
+}
+
+/* 내용부분 */
+.stp_content_box {
+  width: 96%;
+  height: calc(100% - var(--stp-top-height));
+  margin: 0 auto;
+}
+
+.stp_content_form {
+  height: 100%;
+  width: 100%;
+}
+
+.stp_content_title {
+  height: var(--stp-top-height);
+  display: flex;
+  align-items: center;
+}
+
+.stp_content_title_input {
+  margin-left: 8px;
+  flex: 1;
+  font-weight: 600;
+  font-size: 18px;
+  border: none;
+  outline: none;
+}
+
+.stp_content_body {
+  width: 100%;
+  height: calc(100% - var(--stp-top-height));
+}
+
+.stp_body_textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  border: none;
+}
+
+
+
+
+
+
+
+
+.hide{
+  display: none;
+}
