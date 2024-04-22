@@ -1,14 +1,14 @@
 create table folder(
-    id
-    name
+    id varchar not null primary key,
+    name varchar not null
 )
 
 create table memo(
-    id
-    folder_id
-    name
-    title
-    body
+    id varchar not null primary key, 
+    folder_id varchar not null,
+    name varchar not null,
+    title varchar not null,
+    body varchar not null,
 
-    -- casecading 필수
+    foreign key (folder_id) REFERENCES folder(id) on delete CASCADE
 )

@@ -15,4 +15,8 @@ export const config = {
     user: required("DB_USER"),
     database: required("DB_DATABASE"),
   },
+
+  bcrypt: {
+    salt: parseInt(required("SALT", 9)),
+  },
 };

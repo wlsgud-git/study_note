@@ -14,6 +14,7 @@ Pgclient.connect();
 export async function DBplay(query, info) {
   try {
     let data = await Pgclient.query(query, info);
+
     return data.rows;
   } catch (err) {
     throw err;
