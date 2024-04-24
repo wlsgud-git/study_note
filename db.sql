@@ -1,11 +1,11 @@
 create table folder(
-    id varchar not null primary key,
+    id serial primary key not null, 
     name varchar not null
 )
 
 create table memo(
-    id varchar not null primary key, 
-    folder_id varchar not null,
+    id serial primary key not null,
+    folder_id integer not null,
     name varchar not null,
     title varchar not null,
     body varchar not null,

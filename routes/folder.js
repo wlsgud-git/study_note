@@ -1,29 +1,41 @@
 import express from "express";
-import { Folder } from "../data/folder.js";
+import { fol_db } from "../data/folder.js";
 
 const router = express.Router();
-const f = new Folder();
 
-router.get("/folder", async (req, res) => {
-  let list = await f.getFolder();
-  return res.status(200).json({ list });
+router.get("/folder", async (req, res, next) => {
+  try {
+    let list = await fol_db.getFolder();
+    return res.status(200).json({ list });
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.post("/folder", async (req, res) => {
+router.post("/folder", async (req, res, next) => {
   try {
-    await f.addFolder(req.body.name);
+    await fol_db.addFolder(req.body.name);
     return res.status(200).json({ message: "폴더가 생성되었습니다" });
   } catch (err) {
     next(err);
   }
 });
 
-router.put("/folder/:id", (req, res) => {});
+router.put("/folder/:id", async (req, res, next) => {
+  let id = req.params.id;
+  let name = req.body.name;
+  try {
+    await fol_db.modifyFolder({ id, name });
+    return res.status(200).json({ message: "바꿈" });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.delete("/folder/:id", async (req, res) => {
   let id = req.params.id;
   try {
-    await f.deleteFolder(id);
+    await fol_db.deleteFolder(id);
     return res.status(200).json({ message: "삭제완료" });
   } catch (err) {
     console.log(err);

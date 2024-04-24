@@ -2,7 +2,7 @@ import { DBplay } from "../db/db.js";
 import { f_bcrypt } from "../utils/secure.js";
 import { date } from "../utils/date.js";
 
-export class Folder {
+class Folder {
   constructor() {}
 
   async getFolder() {
@@ -31,17 +31,23 @@ export class Folder {
 
   async addFolder(name) {
     try {
-      let id = await f_bcrypt.createHashText(
-        `folder-${name}-${date.CurrentDateString()}`
-      );
-      let query = `insert into folder values($1, $2)`;
-      const data = [id, name];
+      let query = `insert into folder values(default ,$1)`;
+      const data = [name];
       return DBplay(query, data);
     } catch (err) {
       throw err;
     }
   }
-  async modifyFolder() {}
+  async modifyFolder(info) {
+    let { id, name } = info;
+    try {
+      let query = `update folder set name = $1 where id = $2`;
+      const data = [name, id];
+      return DBplay(query, data);
+    } catch (err) {
+      throw err;
+    }
+  }
   async deleteFolder(id) {
     try {
       let query = "delete from folder where id = $1";
@@ -52,3 +58,5 @@ export class Folder {
     }
   }
 }
+
+export let fol_db = new Folder()

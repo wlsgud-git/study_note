@@ -12,10 +12,10 @@ app.use(bodyParser.json());
 
 // routing
 import FolderRouter from "./routes/folder.js";
-import MemoRouter from "./routes/memo.js";
+import FileRouter from "./routes/file.js";
 
 app.use("/", FolderRouter);
-app.use("/", MemoRouter);
+app.use("/", FileRouter);
 
 app.use((req, res, next) => {
   next();
