@@ -85,7 +85,8 @@ input {
 }
 
 /* 폴더 리스트 */
-.stp_folder_list_ul {
+.stp_folder_list_ul,
+.stp_folder_container_box {
   width: 100%;
   overflow: auto;
   display: flex;

@@ -1,26 +1,58 @@
 import { fetching } from "./main.js";
 import { file_display, fi } from "./file.js";
+// import { InsertSearch } from "../../utils/algo.js";
 
 const FolderAdd = document.querySelector(".stp_folder_add_btn");
 const FolderAddForm = document.querySelector(".stp_folder_add_form");
 const FolderAddBox = document.querySelector(".stp_folder_add_section");
 const FolderAddName = document.querySelector(".stp_folder_name_input");
-const FolderListBox = document.querySelector(".stp_folder_list_ul");
+const FolderListBox = document.querySelector(".stp_folder_container_box");
+
+export function InsertSearch(data, t) {
+  if (data.length == 0) return -1;
+
+  let left = 0;
+  let right = data.length - 1;
+
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2);
+    let compare = data[mid].name;
+
+    if (mid == 0 && t < compare) {
+      return -1;
+    }
+
+    if (t < compare) right = mid - 1;
+    else left = mid + 1;
+  }
+  return left;
+}
+
+export function listRerender(parentNode, data, newName) {
+  let parentArr = parentNode.children;
+  let result = InsertSearch(parentArr, newName);
+  let new_list = folder_display(data.info[0]);
+
+  parentNode.insertBefore(
+    new_list,
+    result == -1
+      ? parentNode.firstChild
+      : parentArr[result - 1].nextElementSibling
+  );
+}
 
 // 폴더와 메모 클래스
 class Folder {
   constructor() {}
 
   async getFolder() {
-    let data;
     await fetching("/folder", { method: "get" }).then((info) => {
-      data = info.list;
+      info.list.map((li, idx) => {
+        FolderListBox.appendChild(folder_display(li, idx));
+      });
     });
 
-    for (let i = 0; i < data.length; i++) {
-      let fo = folder_display(data[i]);
-      FolderListBox.appendChild(fo);
-    }
+    return;
   }
 
   async createfolder(e) {
@@ -36,7 +68,7 @@ class Folder {
       method: "post",
       body: JSON.stringify({ name }),
     }).then((data) => {
-      alert("폴더 생성 완료");
+      listRerender(FolderListBox, data, name);
     });
 
     FolderAddName.value = "";
@@ -66,6 +98,7 @@ function folder_display(data) {
   const li = document.createElement("li");
   li.className = "stp_folder_li";
   li.id = data.id;
+  li.name = data.name;
   li.innerHTML = `
     <!-- 폴더 기능 부분 -->
               <div class="stp_func_folder_box hide">
@@ -111,22 +144,17 @@ function folder_display(data) {
 
   li.appendChild(ul);
 
-  memo.map((info) => ul.appendChild(file_display(data.id, info)));
+  if (memo) memo.map((info) => ul.appendChild(file_display(data.id, info)));
   // --------------------------------------------------------------------------------
   // 이벤트 처리부분
   const FolBtn = li.querySelector(".stp_folder_li_btn");
   const FolBox = li.querySelector(".stp_folder_main_box");
   const FolIco = li.querySelector(".fol_ico");
   const FileBox = li.querySelector(".stp_file_lists");
+
   // 기능부분
   const FolfuncBox = li.querySelector(".stp_func_folder_box");
   const FolControlBtn = li.querySelectorAll(".folder_func_btn");
-  // 새파일 추가 부분
-
-  // 이름변경  부분
-  const FolRenameBox = li.querySelector(".stp_folder_rename_box");
-  const FolRenameForm = li.querySelector(".stp_folder_rename_form");
-  const FolRenameInput = li.querySelector(".stp_folder_rename_input");
 
   // 폴더 마우스 이벤트
   FolBtn.addEventListener("mousedown", (e) => {
@@ -163,16 +191,16 @@ function folder_display(data) {
           FolRenameInput.value.length
         );
       } else {
+        console.log("delete")
       }
     });
   });
 
-  // 새파일 추가
+  // 새 파일 이벤트
   const NewFileBox = li.querySelector(".stp_newfile_box");
   const NewFileForm = li.querySelector(".stp_newfile_form");
   const NewFileInput = li.querySelector(".stp_newfile_input");
 
-  // 새 파일 이벤트
   async function newFileValid(e) {
     e.preventDefault();
 
@@ -192,21 +220,29 @@ function folder_display(data) {
     NewFileBox.classList.add("hide");
   }
 
-  NewFileForm.addEventListener("submit", newFileValid);
-  // NewFileForm.addEventListener("focusout", newFileValid);
+  NewFileForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    NewFileBox.classList.add("hide");
+  });
+  NewFileForm.addEventListener("focusout", newFileValid);
 
   // 이름변경 이벤트
+  const FolRenameBox = li.querySelector(".stp_folder_rename_box");
+  const FolRenameForm = li.querySelector(".stp_folder_rename_form");
+  const FolRenameInput = li.querySelector(".stp_folder_rename_input");
   async function renameValid(e) {
-    e.preventDefault();
+    let parent = e.target.parentNode.parentNode.parentNode;
+    let index = Array.prototype.indexOf.call(FolderListBox.children, parent);
 
-    const before = FolBtn.children[1].innerText;
-    const new_ = FolRenameInput.value;
+    let before = FolBtn.children[1];
+    let new_ = FolRenameInput.value;
 
-    if (new_ == "" || new_ == before) {
-      FolRenameInput.value = before;
+    if (new_ == "" || new_ == before.innerText) {
+      FolRenameInput.value = before.innerText;
     } else {
       await fol.RenameFolder(li.id, new_).then((data) => {
-        console.log(data);
+        FolderListBox.removeChild(FolderListBox.childNodes[index]);
+        listRerender(FolderListBox, data, new_);
       });
     }
 
@@ -214,10 +250,12 @@ function folder_display(data) {
     FolBox.classList.remove("hide");
   }
 
-  FolRenameForm.addEventListener("submit", renameValid);
+  FolRenameForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    FolRenameBox.classList.add("hide");
+    FolBox.classList.remove("hide");
+  });
   FolRenameForm.addEventListener("focusout", renameValid);
-
-  // FolRenameInput.add("change", () => {});
 
   return li;
 }

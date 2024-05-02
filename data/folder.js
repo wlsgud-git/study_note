@@ -31,7 +31,7 @@ class Folder {
 
   async addFolder(name) {
     try {
-      let query = `insert into folder values(default ,$1)`;
+      let query = `insert into folder values(default ,$1) RETURNING *`;
       const data = [name];
       return DBplay(query, data);
     } catch (err) {
@@ -41,7 +41,7 @@ class Folder {
   async modifyFolder(info) {
     let { id, name } = info;
     try {
-      let query = `update folder set name = $1 where id = $2`;
+      let query = `update folder set name = $1 where id = $2 RETURNING *`;
       const data = [name, id];
       return DBplay(query, data);
     } catch (err) {
@@ -59,4 +59,4 @@ class Folder {
   }
 }
 
-export let fol_db = new Folder()
+export let fol_db = new Folder();
