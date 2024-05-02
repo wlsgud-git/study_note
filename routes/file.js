@@ -4,8 +4,8 @@ const router = express.Router();
 
 router.post("/file", async (req, res, next) => {
   try {
-    await fi_db.createFile(req.body);
-    return res.status(200).json({ message: "새파일 생성완료" });
+    let info = await fi_db.createFile(req.body);
+    return res.status(200).json({ message: "새파일 생성완료", info });
   } catch (err) {
     next(err);
   }

@@ -1,5 +1,5 @@
 import { fetching } from "./main.js";
-import { file_display, fi } from "./file.js";
+import { fileDisplay, fi } from "./file.js";
 // import { InsertSearch } from "../../utils/algo.js";
 
 const FolderAdd = document.querySelector(".stp_folder_add_btn");
@@ -28,13 +28,12 @@ export function InsertSearch(data, t) {
   return left;
 }
 
-export function listRerender(parentNode, data, newName) {
+export function listRerender(parentNode, childNode, newName) {
   let parentArr = parentNode.children;
   let result = InsertSearch(parentArr, newName);
-  let new_list = folder_display(data.info[0]);
 
   parentNode.insertBefore(
-    new_list,
+    childNode,
     result == -1
       ? parentNode.firstChild
       : parentArr[result - 1].nextElementSibling
@@ -48,7 +47,7 @@ class Folder {
   async getFolder() {
     await fetching("/folder", { method: "get" }).then((info) => {
       info.list.map((li, idx) => {
-        FolderListBox.appendChild(folder_display(li, idx));
+        FolderListBox.appendChild(folderDisplay(li, idx));
       });
     });
 
@@ -68,7 +67,7 @@ class Folder {
       method: "post",
       body: JSON.stringify({ name }),
     }).then((data) => {
-      listRerender(FolderListBox, data, name);
+      listRerender(FolderListBox, folderDisplay(data.info[0]), name);
     });
 
     FolderAddName.value = "";
@@ -92,7 +91,7 @@ class Folder {
 
 export const fol = new Folder();
 
-function folder_display(data) {
+function folderDisplay(data) {
   const memo = data.memo;
 
   const li = document.createElement("li");
@@ -144,7 +143,7 @@ function folder_display(data) {
 
   li.appendChild(ul);
 
-  if (memo) memo.map((info) => ul.appendChild(file_display(data.id, info)));
+  if (memo) ul.appendChild(fileDisplay(memo, "ul"));
   // --------------------------------------------------------------------------------
   // 이벤트 처리부분
   const FolBtn = li.querySelector(".stp_folder_li_btn");
@@ -174,7 +173,7 @@ function folder_display(data) {
 
   // 폴더 func 버튼 클릭 부분
   FolControlBtn.forEach((btn) => {
-    btn.addEventListener("mousedown", (e) => {
+    btn.addEventListener("mousedown", async (e) => {
       e.preventDefault();
       let type = e.target.innerText;
 
@@ -191,7 +190,11 @@ function folder_display(data) {
           FolRenameInput.value.length
         );
       } else {
-        console.log("delete")
+        await fol.deleteFolder(li.id).then((ok) => {
+          let parent = li.parentNode;
+          let index = Array.prototype.indexOf.call(parent.children, li);
+          parent.removeChild(parent.childNodes[index]);
+        });
       }
     });
   });
@@ -200,6 +203,8 @@ function folder_display(data) {
   const NewFileBox = li.querySelector(".stp_newfile_box");
   const NewFileForm = li.querySelector(".stp_newfile_form");
   const NewFileInput = li.querySelector(".stp_newfile_input");
+
+  const FileList = ul.querySelector(".stp_file_list_contaier");
 
   async function newFileValid(e) {
     e.preventDefault();
@@ -214,7 +219,8 @@ function folder_display(data) {
     await fi
       .createFile({ folder_id: li.id, name, title: "", body: "" })
       .then((data) => {
-        console.log("새 파일 생성 완료");
+        console.log(data);
+        // listRerender(FileList, fileDisplay() );
       });
 
     NewFileBox.classList.add("hide");
@@ -231,9 +237,6 @@ function folder_display(data) {
   const FolRenameForm = li.querySelector(".stp_folder_rename_form");
   const FolRenameInput = li.querySelector(".stp_folder_rename_input");
   async function renameValid(e) {
-    let parent = e.target.parentNode.parentNode.parentNode;
-    let index = Array.prototype.indexOf.call(FolderListBox.children, parent);
-
     let before = FolBtn.children[1];
     let new_ = FolRenameInput.value;
 
@@ -241,8 +244,8 @@ function folder_display(data) {
       FolRenameInput.value = before.innerText;
     } else {
       await fol.RenameFolder(li.id, new_).then((data) => {
-        FolderListBox.removeChild(FolderListBox.childNodes[index]);
-        listRerender(FolderListBox, data, new_);
+        FolBtn.children[1].innerText = new_;
+        listRerender(FolderListBox, li, new_);
       });
     }
 

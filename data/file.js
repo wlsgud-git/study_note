@@ -5,7 +5,7 @@ export class File {
   async createFile(info) {
     let { folder_id, name, title, body } = info;
     try {
-      let query = `insert into memo values(default, $1, $2, $3, $4)`;
+      let query = `insert into memo values(default, $1, $2, $3, $4) RETURNING *`;
       const data = [folder_id, name, title, body];
       return DBplay(query, data);
     } catch (err) {

@@ -21,7 +21,7 @@ class Folder {
       from folder as fo
       left join memo as me on fo.id = me.folder_id
       group by fo.id
-      order by fo.name asc`;
+      order by fo.name`;
       let data = [];
       return DBplay(query, data);
     } catch (err) {
