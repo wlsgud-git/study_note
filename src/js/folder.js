@@ -217,7 +217,7 @@ function folderDisplay(data) {
     }
 
     await fi
-      .createFile({ folder_id: li.id, name, title: "", body: "" })
+      .createFile({ folder_id: li.id, name })
       .then((data) => {
         console.log(data);
         // listRerender(FileList, fileDisplay() );

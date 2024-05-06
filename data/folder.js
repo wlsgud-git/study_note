@@ -12,7 +12,7 @@ class Folder {
       fo.id,
       fo.name, 
       case when count(distinct me.id) > 0 then 
-          json_agg(distinct jsonb_build_object(
+          json_agg(jsonb_build_object(
               'id', me.id,
               'name', me.name,
               'title', me.title,
